@@ -14,8 +14,6 @@ let keys = {};
 let score = 0;
 let ball = { x: playerX + playerWidth / 2, y: playerY, radius: 10, speed: 7, angle: 0, thrown: false };
 let enemies = [];
-
-// Enemy variables
 const enemyWidth = 50;
 const enemyHeight = 50;
 const enemyCount = 5;
@@ -30,12 +28,15 @@ window.addEventListener('keyup', (e) => {
 });
 
 // Create random enemies on the screen
-function createEnemies() {
-  for (let i = 0; i < enemyCount; i++) {
-    const x = Math.random() * (canvas.width - enemyWidth);
-    const y = Math.random() * (canvas.height - enemyHeight);
-    enemies.push({ x, y });
-  }
+function createEnemy() {
+  const x = Math.random() * (canvas.width - enemyWidth);
+  const y = Math.random() * (canvas.height - enemyHeight);
+  return { x, y };
+}
+
+// Add initial enemies
+for (let i = 0; i < enemyCount; i++) {
+  enemies.push(createEnemy());
 }
 
 // Draw player and enemies
@@ -110,6 +111,10 @@ function updateGame() {
         enemies.splice(index, 1); // Remove enemy
         ball.thrown = false; // Stop the ball
         score += 10; // Increase score
+        setTimeout(() => {
+          // Respawn enemy after 2 seconds
+          enemies.push(createEnemy());
+        }, 2000);
       }
     });
   }
@@ -125,5 +130,4 @@ function updateGame() {
 }
 
 // Start the game
-createEnemies();  // Create initial enemies
 updateGame();  // Start game loop
